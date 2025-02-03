@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/styles.css">
+    <title>App Web</title>
+</head>
+<body>
+    <h1>Dashboard</h1>
+
+    <div class="modal">
+        <form id="form-energy" name="form-energy">
+            <label for="date">Fecha</label>
+            <input type="date" id="form-date" required>
+            <label for="morning-kwh">Consumo en la mañana</label>
+            <input type="number" min="0" name="morning-kwh" id="form-morning" required>
+            <label for="afternoon-kwh">Consumo en la tarde</label>
+            <input type="number" min="0" name="afternoon-kwh" id="form-afternoon" required>
+            <button type="submit" id="btn-energy" for="form-energy">Registrar</button>
+        </form>
+    </div>
+
+    <button type="button" id="btn-logout">Salir</button>
+
+    <script type="module" src="../js/dashboard.js"></script>
+</body>
+</html>
