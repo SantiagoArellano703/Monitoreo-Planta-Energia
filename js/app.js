@@ -34,15 +34,6 @@ const createLimit = async (userId, limit) => {
     console.log('Limite creado:', newLimit.key);
 };
 
-// const createExcess = async (userId, energyId) => {
-//     let excessCollection = ref(db, `excess/${userId}`);
-//     let newExcess = push(excessCollection);
-//     await set(newExcess, {
-//         excess: energyId
-//     });
-//     console.log('Limite creado:', newExcess.key);
-// };
-
 async function getUserEnergy(uid) {
     try {
         let energyForUser = ref(db, `energy/${uid}`);

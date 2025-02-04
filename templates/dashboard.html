@@ -4,25 +4,147 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
     <title>App Web</title>
 </head>
 <body>
-    <h1>Dashboard</h1>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Inicio</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="dashboard.html">Dashboard</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Registros</a>
+              </li>
+            </ul>
 
-    <div class="modal">
-        <form id="form-energy" name="form-energy">
-            <label for="date">Fecha</label>
-            <input type="date" id="form-date" required>
-            <label for="morning-kwh">Consumo en la mañana</label>
-            <input type="number" min="0" name="morning-kwh" id="form-morning" required>
-            <label for="afternoon-kwh">Consumo en la tarde</label>
-            <input type="number" min="0" name="afternoon-kwh" id="form-afternoon" required>
-            <button type="submit" id="btn-energy" for="form-energy">Registrar</button>
-        </form>
-    </div>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item" id="btn-logout">
+                  <a class="nav-link" href="">Salir</a>
+                </li>
+            </ul>
+            
+          </div>
+        </div>
+    </nav>
 
-    <button type="button" id="btn-logout">Salir</button>
+    <main class="content px-3 py-4">
+        <div class="container-fluid">
+            <div class="mb-3">
+                <div class="container-fluid d-flex align-items-center justify-content-between mb-3">
+                    <h2 class="fw-bold fs-4">Dashboard</h3>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Registrar Consumo
+                    </button>
+                </div>
+                
 
+                <!-- Cards Superiores -->
+                <div class="row">
+                    <div class="col-12 col-md-4">
+                        <div class="card shadow">
+                            <div class="card-body py-4">
+                                <h5 class="mb-2 fw-bold">
+                                    Promedio diario
+                                </h5>
+                                <p class="fw-bold mb-2">
+                                    <span class="text-success" id="consumeAverage"></span>
+                                    <span>kWh</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <div class="card shadow">
+                            <div class="card-body py-4">
+                                <h5 class="mb-2 fw-bold">
+                                    Limite
+                                </h5>
+                                <p class="fw-bold mb-2">
+                                    <span class="text-success" id="limitValue"></span>
+                                    <span>kWh</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <div class="card shadow">
+                            <div class="card-body py-4">
+                                <h5 class="mb-2 fw-bold">
+                                    Días con exceso
+                                </h5>
+                                <p class="fw-bold mb-2">
+                                    <span class="text-success" id="excessValue"></span>
+                                    <span>días</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grafico y resumen -->
+                <div class="row my-3">
+                    <div class="col-12 col-md-8">
+                        <div class="card shadow">
+                            <h3 class="fw-bold fs-4 my-3 px-3">Historial</h3>
+                            <div class="container-fluid px-3 mb-3"> 
+                                <canvas id="historyChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <div class="card shadow">
+                            <h3 class="fw-bold fs-4 my-3 px-3">Últimos 3 días</h3>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        
+
+        <!-- Modal Registros -->
+        
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form-energy" name="form-energy">
+                            <label for="date">Fecha</label>
+                            <input type="date" id="form-date" required>
+                            <label for="morning-kwh">Consumo en la mañana</label>
+                            <input type="number" min="0" step="0.1" name="morning-kwh" id="form-morning" required>
+                            <label for="afternoon-kwh">Consumo en la tarde</label>
+                            <input type="number" min="0" step="0.1" name="afternoon-kwh" id="form-afternoon" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script type="module" src="../js/dashboard.js"></script>
 </body>
 </html>
