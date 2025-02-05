@@ -12,46 +12,102 @@
     <title>App Web</title>
 </head>
 <body>
-    <!-- login -->
-     <section class="login">
+    <section class="auth-container">
         <div class="wrapper">
-            <div class="form-header">
-                <h2 class="title-login">Iniciar sesión</h2>
-            </div>
-            <form method="post" id="form-login">
-                <fieldset class="input-box">
-                    <div class="input-container">
-                        <i class='bx bx-envelope'></i> 
-                        <input type="email" class="input-field" id="email-login" placeholder="Correo electrónico" required>
-                    </div>
-        
-                    <div class="input-container">
-                        <i class='bx bx-lock'></i> 
-                        <input type="password" class="input-field" id="password-login" placeholder="Contraseña" required>
-                    </div>
-                </fieldset>
+            
+            <!-- FORMULARIO DE LOGIN -->
+            <div id="login-form">
+                <div class="form-header">
+                    <h2 class="title-login">Iniciar sesión</h2>
+                </div>
+                <form method="post" id="form-login">
+                    <fieldset class="input-box">
+                        <div class="input-container">
+                            <i class='bx bx-envelope'></i> 
+                            <input type="email" class="input-field" id="email-login" placeholder="Correo electrónico" required>
+                        </div>
+
+                        <div class="input-container">
+                            <i class='bx bx-lock'></i> 
+                            <input type="password" class="input-field" id="password-login" placeholder="Contraseña" required>
+                        </div>
+                    </fieldset>
                     <div class="forms-cols">
                         <a href="#" class="forgot-password">¿Olvidaste la contraseña?</a>
                     </div>
-                <div class="input-box">
-                    <button type="submit" class="btn-submit" id="SignInBtn">Iniciar sesión</button>
+                    <div class="input-box">
+                        <button type="submit" class="btn-submit" id="SignInBtn">Iniciar sesión</button>
+                    </div>
+                    <div class="google-login">
+                        <button type="button" class="btn-submit google-btn" id="GoogleBtn">
+                            <i class='bx bxl-google'></i> Inicia sesión con Google</button>
+                    </div>
+                    <div class="switch-form">
+                        <span>¿No tienes una cuenta? <a href="#" id="show-register">Regístrate</a></span>
+                    </div>
+                </form>
+            </div>
+
+            <!-- FORMULARIO DE REGISTRO -->
+            <div id="register-form" style="display: none;">
+                <div class="form-header">
+                    <h2 class="title-register">Regístrate</h2>
                 </div>
-                <div class="google-login">
-                    <button type="button" class="btn-submit google-btn" id="GoogleBtn">
-                        <i class='bx bxl-google'></i> Inicia sesión con Google</button>
-                </div>
-                <div class="switch-form">
-                    <span>¿No tienes una cuenta? <a href="register.html">Regístrate</a></span>
-                </div>
-            </form>
+                <form method="post" id="form-register">
+                    <fieldset class="input-box">
+                        <div class="input-container">
+                            <i class='bx bx-envelope'></i> 
+                            <input type="email" class="input-field" id="email-register" placeholder="Correo electrónico" required>
+                        </div>
+
+                        <div class="input-container">
+                            <i class='bx bx-lock'></i> 
+                            <input type="password" class="input-field" id="password-register" placeholder="Contraseña" required>
+                        </div>
+
+                        <div class="input-container">
+                            <i class='bx bx-user'></i> 
+                            <input type="text" class="input-field" id="username" placeholder="Nombre" required>
+                        </div>
+
+                        <div class="input-container">
+                            <i class='bx bx-user'></i> 
+                            <input type="text" class="input-field" id="lastname" placeholder="Apellido" required>
+                        </div>
+                    </fieldset>
+                    <div class="input-box">
+                        <button type="submit" class="btn-submit" id="SignUpBtn">Registrarse</button>
+                    </div>
+                    <div class="switch-form">
+                        <span>¿Ya tienes una cuenta? <a href="#" id="show-login">Iniciar sesión</a></span>
+                    </div>
+                </form>
+            </div>
+
         </div>
-     </section>
+    </section>
+
     <script type="module" src="../js/firebaseInit.js"></script>
     <script type="module" src="../js/login.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
+
+    <!-- 🔥 Script para alternar entre Login y Registro -->
+    <script>
+        document.getElementById("show-register").addEventListener("click", function () {
+            document.getElementById("login-form").style.display = "none";
+            document.getElementById("register-form").style.display = "block";
+        });
+
+        document.getElementById("show-login").addEventListener("click", function () {
+            document.getElementById("register-form").style.display = "none";
+            document.getElementById("login-form").style.display = "block";
+        });
+    </script>
+
 </body>
+
 <a href="index.html" class="back-home-btn">
     <box-icon name="log-out"></box-icon> Home
 </a>
