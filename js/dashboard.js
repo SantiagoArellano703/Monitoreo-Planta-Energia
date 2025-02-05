@@ -101,7 +101,7 @@ function calculateAverage(){
 }
 
 function getExcess(){
-    if (!listEnergyUser) return {};
+    if (!listEnergyUser) return [];
     return Object.entries(listEnergyUser).filter(([key, dataEnergy]) => dataEnergy.excess == true);
 }
 
