@@ -1,39 +1,22 @@
 import { auth } from "./firebaseInit.js";
-import { protectRoute, getCurrentUserData, createEnergy, createLimit, getUserEnergy, getLimit, updateLimit, validateEnergy, logout } from "./app.js";
-// import { protectRoute } from "./routes.js";
+import { protectRoute, getCurrentUserData, createEnergy, createLimit, getUserEnergy, getLimit, updateLimit, validateEnergy, updateEnergyExcess, logout } from "./app.js";
 
 protectRoute();
 const [uid, userData] = await getCurrentUserData();
 let listEnergyUser = await getUserEnergy(uid);
 let limit = await getLimit(uid);
 let isFetching = false;
-let [daysChart, dataChart] = getDataForChart(2);
+let [daysChart, dataChart] = [];
 let chart = [];
 
-await initializeDashboard(limit);
-// console.log(limit)
-// console.log(listEnergyUser);
-
-// setInterval(async () => {
-//     if (isFetching) return; // Si ya está obteniendo datos, evita otra llamada
-//     isFetching = true;
-
-//     try {
-//         listEnergyUser = await getUserEnergy(uid);
-//         // console.log(listEnergyUser);
-//     } catch (error) {
-//         console.error("Error al obtener consumos:", error);
-//     } finally {
-//         isFetching = false; // Libera el bloqueo después de completar la ejecución
-//     }
-// }, 2000);
-
+await initializeDashboard();
 
 document.getElementById("btn-logout").addEventListener("click", () => {
     logout(auth);
 });
 
-document.getElementById("form-energy").addEventListener("submit", async () => {
+document.getElementById("form-energy").addEventListener("submit", async (event) => {
+    event.preventDefault();
     let date = document.getElementById("form-date").value;
     let morning = parseFloat(document.getElementById("form-morning").value);
     let afternoon = parseFloat(document.getElementById("form-afternoon").value);
@@ -41,45 +24,66 @@ document.getElementById("form-energy").addEventListener("submit", async () => {
     if (validateEnergy(listEnergyUser, date)) {
         if (morning + afternoon > limit) {
             createEnergy(uid, date, morning, afternoon, true);
-            alert("Se excedió el límite diario");
+            createAlert("danger", "El consumo excedió el límite diario");
         } else {
             createEnergy(uid, date, morning, afternoon);
-            alert("Creado");
+            createAlert("success", "Consumo de energía registrado exitosamente.");
         }
         
-        listEnergyUser = await getUserEnergy(uid);
-        chargeDashboard();
+        await updateExcessUser();
+        await chargeDashboard();
     } else {
         alert("Ya hay un registro para ese día");
     }
     
 });
 
+document.getElementById("form-limit").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    let newLimitValue = parseFloat(document.getElementById("form-limit-modified").value);
+
+    await updateLimit(uid, newLimitValue);
+    await updateExcessUser();
+    await chargeDashboard();
+});
+
+document.getElementById("monthChart").addEventListener("change", (event) => {
+    let month = new Date(event.target.value + "T00:00:00");
+    [daysChart, dataChart] = getDataForChart(month.getMonth() + 1);
+    updateChart(chart, daysChart, dataChart);
+});
 
 /*-------------------------*\
    Funciones
 \*-------------------------*/
 
 async function initializeDashboard() {
-    if ( !limit ) {
-        createLimit(uid, 100);
-        limit = await getLimit(uid);
-    }
-    limit = Object.entries(limit)[0][1].limit;
-
+    setInitialMonth();
+    let month = new Date(document.getElementById("monthChart").value + "T00:00:00");
+    [daysChart, dataChart] = getDataForChart(month.getMonth() + 1);
     chart = createChart(daysChart, dataChart);
-    chargeDashboard();
+    await chargeDashboard();
 }
 
-function chargeDashboard() {
+async function chargeDashboard() {
+    if ( !limit ) {
+        createLimit(uid, 100);
+    }
+
+    limit = await getLimit(uid);
+    limit = Object.entries(limit)[0][1].limit;
     let average = document.getElementById("consumeAverage");
     let limitDiv = document.getElementById("limitValue");
     let excessDiv = document.getElementById("excessValue");
 
+    listEnergyUser = await getUserEnergy(uid);
     average.innerText = calculateAverage();
     limitDiv.innerText = limit;
     excessDiv.innerHTML = getExcess().length;
-    [daysChart, dataChart] = getDataForChart(2);
+
+    setLastDays();
+    let month = new Date(document.getElementById("monthChart").value + "T00:00:00");
+    [daysChart, dataChart] = getDataForChart(month.getMonth() + 1);
     updateChart(chart, daysChart, dataChart);
 }
 
@@ -89,7 +93,7 @@ function calculateAverage(){
     let average = 0;
 
     for (let dataEnergy of arrayEnergy) {
-        average += dataEnergy.morning_kwh + dataEnergy.afternoon_kwh;
+        average += dataEnergy.total_kwh;
     }
 
     average = (average/arrayEnergy.length).toFixed(2);
@@ -110,12 +114,12 @@ function getDataForChart(month){
         new Date(data.date + "T00:00:00").getMonth() + 1 == month
     );
 
-    console.log(listOrdered);
+    // console.log(listOrdered);
 
     listOrdered.sort((a, b) => new Date(a.date) - new Date(b.date));
 
     for (let dataEnergy of listOrdered) {
-        let totalValue = dataEnergy.morning_kwh + dataEnergy.afternoon_kwh;
+        let totalValue = dataEnergy.total_kwh;
         dataChart.push(totalValue);
         daysChart.push(new Date(dataEnergy.date + "T00:00:00").getDate());
     }
@@ -125,20 +129,35 @@ function getDataForChart(month){
 
 function createChart(daysChart, dataChart) {
     const ctx = document.getElementById("historyChart");
-    const data = {
-        labels: daysChart,
-        datasets: [{
-          label: 'My First Dataset',
-          data: dataChart,
-          fill: false,
-          borderColor: 'rgb(75, 192, 192)',
-          tension: 0.1
-        }]
-    };
-    return new Chart(ctx, {
+    const config = {
         type: 'line',
-        data: data
-    });
+        data: {
+            labels: daysChart,
+            datasets: [{
+                label: 'kWh Consumidos',
+                data: dataChart,
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }] 
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Día' 
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                }
+            }
+        }
+    }
+
+    return new Chart(ctx, config);
 }
 
 function updateChart(chart, newLabels, newData) {
@@ -148,5 +167,59 @@ function updateChart(chart, newLabels, newData) {
     chart.update();
 }
 
+async function updateExcessUser() {
+    if (!listEnergyUser) return;
 
+    limit = await getLimit(uid);
+    limit = Object.entries(limit)[0][1].limit;
+    let newExcess = false;
 
+    for (let [id, dataEnergy] of Object.entries(listEnergyUser)) {
+        newExcess = (dataEnergy.total_kwh > limit) ? true : false;
+        await updateEnergyExcess(uid, id, newExcess);
+    }
+}
+
+function setInitialMonth(){
+    let today = new Date();
+    let currentMonth = today.getMonth() + 1;
+    let currentYear = today.getFullYear();
+
+    let formattedDate = `${currentYear}-${currentMonth.toString().padStart(2, '0')}`;
+
+    document.getElementById("monthChart").value = formattedDate;
+}
+
+function setLastDays(){
+    if (!listEnergyUser) return;
+
+    let lastDays = document.getElementById("lastDays");
+    let listOrdered = Object.values(listEnergyUser);
+    listOrdered.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    for (let i = 0; i < 3; i++ ) {
+        let textExcess = listOrdered[i].excess ? "Excede el límite de consumo." : "No excede el límite de consumo."
+
+        lastDays.innerHTML += `<a href="details.html" class="list-group-item list-group-item-action">
+                              <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">Día ${i+1}</h5>
+                                <small class="text-muted">${listOrdered[i].date}</small>
+                              </div>
+                              <p class="mb-1">Turno de mañana: ${listOrdered[i].morning_kwh} kWh. <br>Turno de tarde: ${listOrdered[i].afternoon_kwh} kWh.</p>
+                              <small class="text-muted">${textExcess}</small>
+                                </a>`
+    }
+}
+
+function createAlert(alertType, message) {
+    let newAlert = document.createElement("div");
+    newAlert.className = `alert alert-${alertType} alert-top shadow`;
+    newAlert.role = "alert";
+    newAlert.textContent = message;
+
+    document.body.prepend(newAlert);
+
+    setTimeout(() => {
+        newAlert.remove();
+    }, 2500);
+}

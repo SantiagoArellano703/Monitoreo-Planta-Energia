@@ -1,4 +1,4 @@
-import { ref, push, set, get, update } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
+import { ref, push, set, get, update, remove } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
 import { db, auth } from "./firebaseInit.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
 
@@ -20,6 +20,7 @@ const createEnergy = async (userId, date, morning_kwh, afternoon_kwh, excess = f
         date,
         morning_kwh,
         afternoon_kwh,
+        total_kwh:  morning_kwh + afternoon_kwh,
         excess
     });
     console.log('Registro creado:', newEnergy.key);
@@ -105,6 +106,33 @@ async function getCurrentUserData() {
     })
 }
 
+const updateEnergyExcess = async (userId, energyId, newExcess) => {
+    let energyRef = ref(db, `energy/${userId}/${energyId}`);
+     
+    try {
+        await update(energyRef, {
+            excess: newExcess
+        });
+        console.log('Registro actualizado');
+    } catch (error) {
+        console.log('No se puedo actualizar el registro:', error);
+    }
+    
+};
+
+// const updateEnergyTotal = async (userId, energyId, newTotal) => {
+//     let energyRef = ref(db, `energy/${userId}/${energyId}`);
+     
+//     try {
+//         await update(energyRef, {
+//             total_kwh: newTotal
+//         });
+//         console.log('Registro actualizado');
+//     } catch (error) {
+//         console.log('No se puedo actualizar el registro:', error);
+//     } 
+// };
+
 const updateLimit = async (userId, newLimit) => {
     let limit = await getLimit(userId);
     limit = Object.entries(limit)[0][0];
@@ -117,22 +145,31 @@ const updateLimit = async (userId, newLimit) => {
     console.log('Límite actualizado:', limit);
 };
 
+const deleteEnergy = async (userId, energyId) => {
+    let energyRef = ref(db, `energy/${userId}/${energyId}`);
+     
+    try {
+        await remove(energyRef);
+        console.log('Registro eliminado');
+    } catch (error) {
+        console.log('No se puedo eliminar el registro:', error);
+    }
+};
+
 function logout(auth) {
     signOut(auth)
     .then(() => {
-        // La sesión se cerró correctamente
         console.log("Sesión cerrada exitosamente.");
-        window.location.href = "./index.html"; // Redirigir al login
+        window.location.href = "./index.html";
     })
     .catch((error) => {
-        // Manejar errores
         console.error("Error al cerrar sesión:", error);
     });
 }
 
 function protectRoute() {
     onAuthStateChanged(auth, (user) => {
-        if (!user && (window.location.pathname.includes("dashboard.html") || window.location.pathname.includes("admin.html"))){
+        if (!user && (window.location.pathname.includes("dashboard.html") || window.location.pathname.includes("details.html"))){
             window.location.href = "./login.html";
         }
         else if (user && window.location.pathname.includes("login.html")) {
@@ -169,5 +206,7 @@ export {
     updateLimit,
     getUserEnergy,
     validateEnergy,
-    getLimit
+    getLimit,
+    updateEnergyExcess,
+    deleteEnergy
 };

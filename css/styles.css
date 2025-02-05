@@ -7,3 +7,13 @@
     flex-direction: column;
     align-items: start;
 }
+
+.alert-top {
+    position: absolute !important;
+    top: 20px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 80%;
+    z-index: 100;
+}
