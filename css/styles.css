@@ -18,14 +18,28 @@
     z-index: 100;
 }
 
+/* .card {
+    transition: 30ms;
+}
+
+.card:hover {
+    transition: 30ms;
+    transform: scale(1.01);
+    background-color: rgb(61, 134, 82);
+} */
+
 .card-icons {
     font-size: 3rem;
 }
 
-#monthChart {
+.dashboard-chart {
     border: 1px solid rgb(168, 170, 169);
     border-radius: 5px;
     padding-inline: 3px;
+}
+
+.div-charts {
+    max-height: 50vh;
 }
 
 /*-------------------------*\

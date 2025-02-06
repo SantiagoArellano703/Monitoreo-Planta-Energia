@@ -6,8 +6,9 @@ const [uid, userData] = await getCurrentUserData();
 let listEnergyUser = await getUserEnergy(uid);
 let limit = await getLimit(uid);
 let isFetching = false;
-let [daysChart, dataChart] = [];
+let [daysChart, dataChart, dataPieChart] = [];
 let chart = [];
+let pieChart = [];
 
 await initializeDashboard();
 
@@ -49,8 +50,21 @@ document.getElementById("form-limit").addEventListener("submit", async (event) =
 
 document.getElementById("monthChart").addEventListener("change", (event) => {
     let month = new Date(event.target.value + "T00:00:00");
-    [daysChart, dataChart] = getDataForChart(month.getMonth() + 1);
-    updateChart(chart, daysChart, dataChart);
+    [daysChart, dataChart, dataPieChart] = getDataForChart(month.getMonth() + 1);
+    updateChart(chart, daysChart, dataChart, pieChart, dataPieChart);
+});
+
+document.getElementById("selectChart").addEventListener("change", (event) => {
+    let lineChart = document.getElementById("historyChart");
+    let pieChart = document.getElementById("pieChart");
+
+    if (event.target.value == "line") {
+        lineChart.setAttribute("style", "display: block;");
+        pieChart.setAttribute("style", "display: none;");
+    } else {
+        pieChart.setAttribute("style", "display: block;");
+        lineChart.setAttribute("style", "display: none;");
+    }
 });
 
 /*-------------------------*\
@@ -60,8 +74,9 @@ document.getElementById("monthChart").addEventListener("change", (event) => {
 async function initializeDashboard() {
     setInitialMonth();
     let month = new Date(document.getElementById("monthChart").value + "T00:00:00");
-    [daysChart, dataChart] = getDataForChart(month.getMonth() + 1);
+    [daysChart, dataChart, dataPieChart] = getDataForChart(month.getMonth() + 1);
     chart = createChart(daysChart, dataChart);
+    pieChart = createPieChart();
     await chargeDashboard();
 }
 
@@ -83,8 +98,8 @@ async function chargeDashboard() {
 
     setLastDays();
     let month = new Date(document.getElementById("monthChart").value + "T00:00:00");
-    [daysChart, dataChart] = getDataForChart(month.getMonth() + 1);
-    updateChart(chart, daysChart, dataChart);
+    [daysChart, dataChart, dataPieChart] = getDataForChart(month.getMonth() + 1);
+    updateChart(chart, daysChart, dataChart, pieChart, dataPieChart);
 }
 
 function calculateAverage(){
@@ -109,6 +124,9 @@ function getDataForChart(month){
     if (!listEnergyUser) return [];
     let dataChart = [];
     let daysChart = [];
+    let dataPieChart = [];
+    let morning_kwh_total = 0;
+    let afternoon_kwh_total = 0;
 
     let listOrdered = Object.values(listEnergyUser).filter(data => 
         new Date(data.date + "T00:00:00").getMonth() + 1 == month
@@ -122,9 +140,12 @@ function getDataForChart(month){
         let totalValue = dataEnergy.total_kwh;
         dataChart.push(totalValue);
         daysChart.push(new Date(dataEnergy.date + "T00:00:00").getDate());
+        morning_kwh_total += dataEnergy.morning_kwh;
+        afternoon_kwh_total += dataEnergy.afternoon_kwh;
     }
 
-    return [daysChart, dataChart];
+    dataPieChart = [morning_kwh_total, afternoon_kwh_total];
+    return [daysChart, dataChart, dataPieChart];
 }
 
 function createChart(daysChart, dataChart) {
@@ -160,11 +181,41 @@ function createChart(daysChart, dataChart) {
     return new Chart(ctx, config);
 }
 
-function updateChart(chart, newLabels, newData) {
+function createPieChart(data) {
+    const ctx = document.getElementById("pieChart");
+    const config = {
+        type: 'pie',
+        data: {
+            datasets: [{
+                label: 'kWh Consumidos',
+                data: [20, 50],
+                fill: true,
+                backgroundColor: [
+                    'rgb(75, 192, 192)',
+                    'rgb(75, 192, 118)',
+                ],
+                tension: 0.1
+            }],
+            labels: [
+                'Turno de mañana',
+                'Turno de tarde'
+            ]
+        },
+        options: {
+            responsive: true,
+        }
+    }
+
+    return new Chart(ctx, config);
+}
+
+function updateChart(chart, newLabels, newData, pieChart, dataPieChart) {
     chart.data.labels = newLabels; 
     chart.data.datasets[0].data = newData;
+    pieChart.data.datasets[0].data = dataPieChart
 
     chart.update();
+    pieChart.update();
 }
 
 async function updateExcessUser() {
@@ -196,6 +247,7 @@ function setLastDays(){
     let lastDays = document.getElementById("lastDays");
     let listOrdered = Object.values(listEnergyUser);
     listOrdered.sort((a, b) => new Date(b.date) - new Date(a.date));
+    lastDays.innerHTML = "";    
 
     for (let i = 0; i < 3; i++ ) {
         let textExcess = listOrdered[i].excess ? "Excede el límite de consumo." : "No excede el límite de consumo."
