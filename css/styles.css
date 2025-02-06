@@ -18,15 +18,17 @@
     z-index: 100;
 }
 
-/* .card {
-    transition: 30ms;
+.card {
+    transition: 0.4s;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    border-color: rgba(231, 243, 241, 0.7);
 }
 
-.card:hover {
-    transition: 30ms;
-    transform: scale(1.01);
-    background-color: rgb(61, 134, 82);
-} */
+.card-top:hover {
+    background-color: rgb(75, 158, 99);
+    transform: translateY(-5px);
+}
 
 .card-icons {
     font-size: 3rem;

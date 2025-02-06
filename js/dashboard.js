@@ -67,6 +67,10 @@ document.getElementById("selectChart").addEventListener("change", (event) => {
     }
 });
 
+document.querySelectorAll(".card-details").forEach(element => {
+    element.addEventListener("click", () => {window.location.href = "details.html"});
+});
+
 /*-------------------------*\
    Funciones
 \*-------------------------*/
