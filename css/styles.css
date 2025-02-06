@@ -17,3 +17,28 @@
     width: 80%;
     z-index: 100;
 }
+
+.card-icons {
+    font-size: 3rem;
+}
+
+#monthChart {
+    border: 1px solid rgb(168, 170, 169);
+    border-radius: 5px;
+    padding-inline: 3px;
+}
+
+/*-------------------------*\
+   DETAILS
+\*-------------------------*/
+
+.delete-icon {
+    transition: 30ms;
+    font-size: 1.5rem;
+}
+
+.delete-icon:hover {
+    transition: 30ms;
+    transform: scale(1.1);
+    /* filter: drop-shadow(0 5px 5px rgba(206, 200, 200, 0.8)); */
+}

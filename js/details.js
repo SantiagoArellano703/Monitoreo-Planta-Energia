@@ -42,15 +42,17 @@ async function chargeTable(){
                         <td>${dataEnergy.afternoon_kwh}</td>
                         <td>${dataEnergy.total_kwh}</td>
                         <td>${excess}</td>
-                        <td><button class="btn btn-danger btn-sm delete-btn">-</button></td>`
+                        <td><i class='bx bx-trash delete-icon'></i></td>`
 
         position++;
         if (dataEnergy.excess) {
             row.classList.add("table-danger");
         }
+
+        // row.classList.add();
         tableBody.appendChild(row);
 
-        row.querySelector(".delete-btn").addEventListener("click", async function() {
+        row.querySelector(".delete-icon").addEventListener("click", async function() {
             deleteEnergy(uid, id);
             row.remove();
             listEnergyUser = await getUserEnergy(uid);
