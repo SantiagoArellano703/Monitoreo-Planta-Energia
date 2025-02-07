@@ -162,7 +162,7 @@ function createChart(daysChart, dataChart) {
                 label: 'kWh Consumidos',
                 data: dataChart,
                 fill: false,
-                borderColor: 'rgb(75, 192, 192)',
+                borderColor: '#7e9378',
                 tension: 0.1
             }] 
         },
@@ -195,8 +195,8 @@ function createPieChart(data) {
                 data: [20, 50],
                 fill: true,
                 backgroundColor: [
-                    'rgb(75, 192, 192)',
-                    'rgb(75, 192, 118)',
+                    '#7e9378',
+                    '#97bbf0'
                 ],
                 tension: 0.1
             }],

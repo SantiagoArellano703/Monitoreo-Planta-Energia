@@ -1,6 +1,498 @@
+:root{
+    --green:#7e9378;
+    --light-green: #dee0d9;
+    --pink: #eacbd1;
+    --blue: #97bbf0;
+    --light-blue: #bfcee5;
+    --black: #020202;
+    --white: #f6f6f6;
+    --dark-green: #565d54;
+    --dark-gray: #4f4f4f;
+    --gray: rgba(231, 243, 241, 0.7);
+    --red: #bc4c4c;
+    --roboto: "Roboto", serif;
+    
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+html, body {
+    height: 100%;
+}
+
+
+/*-------------------------*\
+    NAVBAR
+\*-------------------------*/
+
+.navbar-home{
+    background-color: var(--white);
+    height:80px;
+    margin: 20px;
+    border-radius: 16px;
+    padding: 0.5rem;
+}
+
+.login-button{
+    background-color: var(--green);
+    color: var(--white);
+    font-size: 20px;
+    padding: 8px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: 0.3s background-color;
+}
+
+.login-button:hover{
+    background-color: var(--dark-green);
+}
+
+.navbar-brand-home{
+    font-family: var(--roboto);
+    font-weight: bold;
+    color: var(--green);
+    font-size: 24px;
+    transition: 0.3s color;
+}
+
+.navbar-toggler-home{
+    border: none;
+    font-size: 1.25rem;
+}
+
+.navbar-toggler-home:focus, btn-close:focus{
+    box-shadow: none;
+    outline: none;
+}
+
+.nav-link-home{
+    color: var(--dark-gray);
+    font-weight: 500;
+    position:relative;
+    font-size: 20px;
+}
+
+
+.nav-link-home:hover, .nav-link.active{
+    color: var(--black);
+}
+
+
+@media (min-width: 990px){
+    .nav-link-home::before{  
+        content:"";
+        position: absolute;
+        bottom: 0;
+        left:50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 2%;
+        background-color: var(--dark-green);
+        visibility: hidden;
+        transition: 0.3s ease-in-out;
+        
+    }
+    
+    .nav-link-home:hover::before{
+        width: 100%;
+        visibility: visible;
+    }
+}
+
+@media (max-width: 990px) {
+    .offcanvas {
+        background-color: var(--dark-green); 
+    }
+
+    .offcanvas .nav-link {
+        color: var(--white); 
+        position:relative;
+        text-align: center;
+        font-size: 20px;
+        gap: 20px;
+    }
+
+    .offcanvas .offcanvas-title{
+        display: flex;
+        color: var(--white); 
+        justify-content: center;
+        font-size: 20px;
+        width: 100%;
+        margin-top: 30px;
+    }
+
+    .offcanvas .nav-link:hover {
+        color: var(--black);
+    }
+
+    .offcanvas .btn-close {
+        filter: invert(1); 
+    }
+
+    .offcanvas-backdrop {
+        backdrop-filter: blur(100px); 
+        background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    .back-home-btn {
+        top: 10px;
+        left: 10px;
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+
+    .back-home-btn box-icon {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+.navbar-dashboard {
+    background-color: var(--dark-green);
+    border-radius: 10px;
+    margin: 5px;
+    padding: 2px;
+}
+
+/*-------------------------*\
+   HOME
+\*-------------------------*/
+
+.hero-section {
+    background: url("../img/energia.jpg") no-repeat center;
+    background-size: cover;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--white);
+    position: relative;
+    padding-top: 80px; 
+}
+
+.hero-section::before {
+    background-color: rgba(0, 0, 0, 0.6);
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.hero-section .container {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    padding: 20px;
+    opacity: 0; 
+    animation: fadeIn 1.5s ease-in-out forwards; 
+    background: rgba(255, 255, 255, 0.1);  
+    backdrop-filter: blur(13px); 
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/*-------------------------*\
+   LOGIN
+\*-------------------------*/
+
+.auth-container {
+    background: url("../img/bombilla-planta.jpg") no-repeat center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.auth-container::before {
+    background-color: rgba(0, 0, 0, 0.6);
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    backdrop-filter: blur(5px);
+}
+
+#login-form, #register-form {
+    transition: opacity 0.3s ease-in-out;
+}
+
+.login {
+    background: url("../img/bombilla-planta.jpg") no-repeat center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; 
+    padding: 20px;
+}
+
+
+.wrapper {
+    position: relative;
+    width: 430px;
+    height: 500px;
+    padding: 120px 32px 64px;
+    background: var(--white);
+    border-radius: 15px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6);
+    text-align: center;
+    transition: 0.3s;
+    z-index: 3;
+}
+
+.form-header{
+    position: absolute;
+    top: 0;
+    display:flex;
+    align-items: center;
+    left: 50%;
+    transform: translateX(-50%);
+    justify-content: center;
+    width: 200px;
+    height: 50px;
+    background-color: var(--green);
+    border-radius: 0 0 20px 20px;
+}
+
+.form-header::before, .form-header::after{
+    content: "";
+    position: absolute;
+    top:0;
+    width: 30px;
+    height: 30px;
+
+}
+
+.form-header::before{
+    left:-30px;
+    border-top-right-radius: 50%;
+    box-shadow: 15px 0 0 var(--green);
+}
+
+.form-header::after{
+    right:-30px;
+    border-top-left-radius: 50%;
+    box-shadow: -15px 0 0 var(--green);
+}
+
+.title-login{
+    position: absolute;
+    color: var(--white);
+    transition: 0.3s;
+    font-size: 28px;
+}
+
+.form-login{
+    position: absolute;
+    left: 50%;
+    
+    transform: translateX(-50%);
+    width: 85%;
+    transition: 0.3s;
+}
+
+.input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+}
+
+.input-container i {
+    position: absolute;
+    left: 15px;
+    font-size: 20px;
+    color: var(--dark-gray);
+}
+
+.input-field {
+    width: 100%;
+    height: 55px;
+    background: transparent;
+    padding: 12px 15px 12px 40px;
+    border: 1px solid var(--dark-gray);
+    border-radius: 20px;
+    font-size: 16px;
+    outline: none;
+}
+
+
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--green);
+    border-radius: 15px;
+    color: var(--white);
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+.btn-submit:hover {
+    background-color: var(--dark-green);
+}
+
+
+.google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+
+    background: transparent;
+    color: var(--dark-green);
+    border: 2px solid var(--green);
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, color 0.3s ease-in-out; 
+}
+
+
+.google-btn:hover {
+    background: var(--green); 
+    color: var(--white); 
+}
+
+.google-btn i {
+    font-size: 18px;
+}
+
+.forgot-password {
+    margin-bottom: 20px;
+    display: block;
+    text-align: right;
+    font-size: 14px;
+    color: var(--dark-gray);
+    text-decoration: none;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.switch-form{
+    margin-top: 10px;
+    color: var(--black);
+}
+
+.switch-form a{
+    color: var(--black);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease-in-out;    
+}
+
+.switch-form a:hover{
+    color: var(--green);
+}
+
+.back-home-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--green); 
+    color: var(--white); 
+    padding: 10px 15px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 3;
+}
+
+.back-home-btn box-icon {
+    width: 20px;
+    height: 20px;
+    fill: var(--white);
+}
+
+
+.back-home-btn:hover {
+    background: var(--dark-green);
+    color: var(--white);
+}
+
+/*-------------------------*\
+   REGISTER
+\*-------------------------*/
+
+.register {
+    background: url("../img/bombilla-planta.jpg") no-repeat center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; 
+    padding: 20px;
+}
+
+.register::before {
+    background-color: rgba(0, 0, 0, 0.6);
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    backdrop-filter: blur(5px);
+    height: 100%;
+    width: 100%;
+}
+
+.title-register{
+    position: absolute;
+    color: var(--white);
+    transition: 0.3s;
+    font-size: 28px;
+}
+
 /*-------------------------*\
    DASHBOARD
 \*-------------------------*/
+
+main{
+
+}
+
+.body-dashboard, .body-details {
+    background-color: var(--light-green);
+}
 
 #form-energy {
     display: flex;
@@ -22,12 +514,26 @@
     transition: 0.4s;
     cursor: pointer;
     margin-bottom: 1rem;
-    border-color: rgba(231, 243, 241, 0.7);
+    border-color: var(--gray);
+}
+
+.card-top-span {
+    transition: 0.4s;
+    color: var(--dark-green);
+}
+
+#excessValue {
+    color:var(--red);
 }
 
 .card-top:hover {
-    background-color: rgb(75, 158, 99);
+    background-color: var(--green);
     transform: translateY(-5px);
+    color: var(--white);
+
+    .card-top-span, #excessValue {
+        color: var(--white);
+    }
 }
 
 .card-icons {
@@ -35,13 +541,24 @@
 }
 
 .dashboard-chart {
-    border: 1px solid rgb(168, 170, 169);
+    border: 1px solid var(--gray);
     border-radius: 5px;
     padding-inline: 3px;
 }
 
 .div-charts {
     max-height: 50vh;
+}
+
+.btn-primary {
+    transition: 0.2s !important;
+    background-color: var(--green) !important;
+    border-color: var(--green) !important;
+}
+
+.btn-primary:hover {
+    /* transform:; */
+    transform:  scale(1.05);
 }
 
 /*-------------------------*\
