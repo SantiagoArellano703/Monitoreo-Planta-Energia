@@ -160,7 +160,7 @@ function logout(auth) {
     signOut(auth)
     .then(() => {
         console.log("Sesión cerrada exitosamente.");
-        window.location.href = "./index.html";
+        window.location.href = "../index.html";
     })
     .catch((error) => {
         console.error("Error al cerrar sesión:", error);

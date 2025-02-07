@@ -251,9 +251,11 @@ function setLastDays(){
     let lastDays = document.getElementById("lastDays");
     let listOrdered = Object.values(listEnergyUser);
     listOrdered.sort((a, b) => new Date(b.date) - new Date(a.date));
-    lastDays.innerHTML = "";    
+    lastDays.innerHTML = "";   
+    
+    let max = listOrdered.length >= 3 ? 3 : listOrdered.length;
 
-    for (let i = 0; i < 3; i++ ) {
+    for (let i = 0; i < max; i++ ) {
         let textExcess = listOrdered[i].excess ? "Excede el límite de consumo." : "No excede el límite de consumo."
 
         lastDays.innerHTML += `<a href="details.html" class="list-group-item list-group-item-action">
