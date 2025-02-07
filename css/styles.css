@@ -150,7 +150,7 @@ html, body {
 }
 
 .navbar-dashboard {
-    background-color: var(--dark-green);
+    background-color: var(--green);
     border-radius: 10px;
     margin: 5px;
     padding: 2px;
