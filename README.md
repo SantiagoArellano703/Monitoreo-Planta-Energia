@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/e2ecc4c1-ddef-468a-b8eb-0abdf051f662)# ⚡ ElectroTracker  
+# ElectroTracker  
 
 **ElectroTracker** es una aplicación web diseñada para el **registro y monitoreo del consumo energético** en una planta de producción. Permite visualizar el consumo por turnos, generar alertas si se excede un límite establecido y gestionar usuarios con autenticación segura.  
 ![image](https://github.com/user-attachments/assets/0f9c532c-deb6-4ecd-831e-c91b94138c8c)
